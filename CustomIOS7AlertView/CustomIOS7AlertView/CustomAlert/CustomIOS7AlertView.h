@@ -19,9 +19,12 @@
 
 @interface CustomIOS7AlertView : UIView<CustomIOS7AlertViewDelegate>
 
-@property (nonatomic, retain) UIView *parentView;    // The parent view this 'dialog' is attached to
+// The parent view this 'dialog' is attached to
 @property (nonatomic, retain) UIView *dialogView;    // Dialog's container view
-@property (nonatomic, retain) UIView *containerView; // Container within the dialog (place your ui elements here)
+
+// Container within the dialog (place your ui elements here)
+@property (nonatomic, strong) UIView *containerViewLandscape;
+@property (nonatomic, strong) UIView *containerViewPortrait;
 
 @property (nonatomic, assign) id<CustomIOS7AlertViewDelegate> delegate;
 @property (nonatomic, retain) NSArray *buttonTitles;
@@ -30,11 +33,6 @@
 @property (copy) void (^onButtonTouchUpInside)(CustomIOS7AlertView *alertView, int buttonIndex) ;
 
 - (id)init;
-
-/*!
- DEPRECATED: Use the [CustomIOS7AlertView init] method without passing a parent view.
- */
-- (id)initWithParentView: (UIView *)_parentView __attribute__ ((deprecated));
 
 - (void)show;
 - (void)close;

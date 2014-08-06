@@ -20,8 +20,10 @@
 		5EB26CEE17EC5EEB00F0971C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EB26CCA17EC5EEB00F0971C /* Foundation.framework */; };
 		5EB26CEF17EC5EEB00F0971C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EB26CCE17EC5EEB00F0971C /* UIKit.framework */; };
 		5EB26D0317EC642000F0971C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EB26D0217EC642000F0971C /* Images.xcassets */; };
-		5EE9A9BB17EC68960031B75E /* CustomIOS7AlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EE9A9BA17EC68960031B75E /* CustomIOS7AlertView.m */; };
-		5EE9A9BE17EC7EA60031B75E /* demo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5EE9A9BD17EC7EA60031B75E /* demo.png */; };
+		7418E8B91990E2260075C3A2 /* CustomIOS7AlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7418E8B51990E2250075C3A2 /* CustomIOS7AlertView.m */; };
+		7418E8BA1990E2260075C3A2 /* PortraitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7418E8B71990E2250075C3A2 /* PortraitView.xib */; };
+		7418E8BB1990E2260075C3A2 /* LandscapeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7418E8B81990E2260075C3A2 /* LandscapeView.xib */; };
+		7418E8BD1990F1270075C3A2 /* img1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7418E8BC1990F1270075C3A2 /* img1.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,9 +54,11 @@
 		5EB26CEB17EC5EEB00F0971C /* CustomIOS7AlertViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CustomIOS7AlertViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EB26CEC17EC5EEB00F0971C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		5EB26D0217EC642000F0971C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		5EE9A9B917EC68960031B75E /* CustomIOS7AlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomIOS7AlertView.h; sourceTree = "<group>"; };
-		5EE9A9BA17EC68960031B75E /* CustomIOS7AlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomIOS7AlertView.m; sourceTree = "<group>"; };
-		5EE9A9BD17EC7EA60031B75E /* demo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = demo.png; sourceTree = "<group>"; };
+		7418E8B41990E2250075C3A2 /* CustomIOS7AlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomIOS7AlertView.h; sourceTree = "<group>"; };
+		7418E8B51990E2250075C3A2 /* CustomIOS7AlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomIOS7AlertView.m; sourceTree = "<group>"; };
+		7418E8B71990E2250075C3A2 /* PortraitView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PortraitView.xib; sourceTree = "<group>"; };
+		7418E8B81990E2260075C3A2 /* LandscapeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LandscapeView.xib; sourceTree = "<group>"; };
+		7418E8BC1990F1270075C3A2 /* img1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img1.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,7 +117,9 @@
 		5EB26CD017EC5EEB00F0971C /* CustomIOS7AlertView */ = {
 			isa = PBXGroup;
 			children = (
-				5EE9A9B817EC68650031B75E /* View */,
+				7418E8BC1990F1270075C3A2 /* img1.jpg */,
+				7418E8B31990E2250075C3A2 /* CustomAlert */,
+				7418E8B61990E2250075C3A2 /* Xib */,
 				5EB26CD917EC5EEB00F0971C /* AppDelegate.h */,
 				5EB26CDA17EC5EEB00F0971C /* AppDelegate.m */,
 				5EB26CE217EC5EEB00F0971C /* ViewController.h */,
@@ -138,21 +144,29 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		5EE9A9B817EC68650031B75E /* View */ = {
-			isa = PBXGroup;
-			children = (
-				5EE9A9B917EC68960031B75E /* CustomIOS7AlertView.h */,
-				5EE9A9BA17EC68960031B75E /* CustomIOS7AlertView.m */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
 		5EE9A9BC17EC7EA00031B75E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				5EE9A9BD17EC7EA60031B75E /* demo.png */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		7418E8B31990E2250075C3A2 /* CustomAlert */ = {
+			isa = PBXGroup;
+			children = (
+				7418E8B41990E2250075C3A2 /* CustomIOS7AlertView.h */,
+				7418E8B51990E2250075C3A2 /* CustomIOS7AlertView.m */,
+			);
+			path = CustomAlert;
+			sourceTree = "<group>";
+		};
+		7418E8B61990E2250075C3A2 /* Xib */ = {
+			isa = PBXGroup;
+			children = (
+				7418E8B71990E2250075C3A2 /* PortraitView.xib */,
+				7418E8B81990E2260075C3A2 /* LandscapeView.xib */,
+			);
+			path = Xib;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -232,9 +246,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				5EB26CE117EC5EEB00F0971C /* Main_iPad.storyboard in Resources */,
-				5EE9A9BE17EC7EA60031B75E /* demo.png in Resources */,
 				5EB26D0317EC642000F0971C /* Images.xcassets in Resources */,
+				7418E8BD1990F1270075C3A2 /* img1.jpg in Resources */,
+				7418E8BA1990E2260075C3A2 /* PortraitView.xib in Resources */,
 				5EB26CDE17EC5EEB00F0971C /* Main_iPhone.storyboard in Resources */,
+				7418E8BB1990E2260075C3A2 /* LandscapeView.xib in Resources */,
 				5EB26CD517EC5EEB00F0971C /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -253,7 +269,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5EE9A9BB17EC68960031B75E /* CustomIOS7AlertView.m in Sources */,
+				7418E8B91990E2260075C3A2 /* CustomIOS7AlertView.m in Sources */,
 				5EB26CE417EC5EEB00F0971C /* ViewController.m in Sources */,
 				5EB26CDB17EC5EEB00F0971C /* AppDelegate.m in Sources */,
 				5EB26CD717EC5EEB00F0971C /* main.m in Sources */,

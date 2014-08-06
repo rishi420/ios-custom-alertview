@@ -12,6 +12,14 @@
 #import "CustomIOS7AlertView.h"
 #import <QuartzCore/QuartzCore.h>
 
+@interface CustomIOS7AlertView ()
+
+@property (nonatomic, strong) UIView *lineView;
+@property (nonatomic, strong) CAGradientLayer *gradient;
+@property (nonatomic, retain) UIView *containerView;
+
+@end
+
 const static CGFloat kCustomIOS7AlertViewDefaultButtonHeight       = 50;
 const static CGFloat kCustomIOS7AlertViewDefaultButtonSpacerHeight = 1;
 const static CGFloat kCustomIOS7AlertViewCornerRadius              = 7;
@@ -22,20 +30,10 @@ const static CGFloat kCustomIOS7MotionEffectExtent                 = 10.0;
 CGFloat buttonHeight = 0;
 CGFloat buttonSpacerHeight = 0;
 
-@synthesize parentView, containerView, dialogView, onButtonTouchUpInside;
+@synthesize dialogView, onButtonTouchUpInside;
 @synthesize delegate;
 @synthesize buttonTitles;
 @synthesize useMotionEffects;
-
-- (id)initWithParentView: (UIView *)_parentView
-{
-    self = [self init];
-    if (_parentView) {
-        self.frame = _parentView.frame;
-        self.parentView = _parentView;
-    }
-    return self;
-}
 
 - (id)init
 {
@@ -50,6 +48,8 @@ CGFloat buttonSpacerHeight = 0;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+        
+        self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     }
     return self;
 }
@@ -58,7 +58,7 @@ CGFloat buttonSpacerHeight = 0;
 - (void)show
 {
     dialogView = [self createContainerView];
-  
+    
     dialogView.layer.shouldRasterize = YES;
     dialogView.layer.rasterizationScale = [[UIScreen mainScreen] scale];
   
@@ -75,37 +75,17 @@ CGFloat buttonSpacerHeight = 0;
     dialogView.layer.transform = CATransform3DMakeScale(1.3f, 1.3f, 1.0);
 
     self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
-
     [self addSubview:dialogView];
-
-    // Can be attached to a view or to the top most window
-    // Attached to a view:
-    if (parentView != NULL) {
-        [parentView addSubview:self];
-
-    // Attached to the top most window (make sure we are using the right orientation):
-    } else {
-        UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-        switch (interfaceOrientation) {
-            case UIInterfaceOrientationLandscapeLeft:
-                self.transform = CGAffineTransformMakeRotation(M_PI * 270.0 / 180.0);
-                break;
-                
-            case UIInterfaceOrientationLandscapeRight:
-                self.transform = CGAffineTransformMakeRotation(M_PI * 90.0 / 180.0);
-                break;
-
-            case UIInterfaceOrientationPortraitUpsideDown:
-                self.transform = CGAffineTransformMakeRotation(M_PI * 180.0 / 180.0);
-                break;
-
-            default:
-                break;
-        }
-
-        [self setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-        [[[[UIApplication sharedApplication] windows] firstObject] addSubview:self];
+    
+    
+    UIWindow* window = [UIApplication sharedApplication].keyWindow;
+    if (!window) {
+        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
     }
+    
+    UIView *windowWithOrieantation = [[window subviews] objectAtIndex:0];
+    [windowWithOrieantation addSubview:self];
+    
 
     [UIView animateWithDuration:0.2f delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
 					 animations:^{
@@ -164,16 +144,14 @@ CGFloat buttonSpacerHeight = 0;
 
 - (void)setSubView: (UIView *)subView
 {
-    containerView = subView;
+    self.containerView = subView;
 }
 
 // Creates the container view here: create the dialog, then add the custom content and buttons
 - (UIView *)createContainerView
 {
-    if (containerView == NULL) {
-        containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 150)];
-    }
-
+    self.containerView = [self setupContainerView];
+    
     CGSize screenSize = [self countScreenSize];
     CGSize dialogSize = [self countDialogSize];
 
@@ -184,17 +162,17 @@ CGFloat buttonSpacerHeight = 0;
     UIView *dialogContainer = [[UIView alloc] initWithFrame:CGRectMake((screenSize.width - dialogSize.width) / 2, (screenSize.height - dialogSize.height) / 2, dialogSize.width, dialogSize.height)];
 
     // First, we style the dialog to match the iOS7 UIAlertView >>>
-    CAGradientLayer *gradient = [CAGradientLayer layer];
-    gradient.frame = dialogContainer.bounds;
-    gradient.colors = [NSArray arrayWithObjects:
+    _gradient = [CAGradientLayer layer];
+    self.gradient.frame = dialogContainer.bounds;
+    self.gradient.colors = [NSArray arrayWithObjects:
                        (id)[[UIColor colorWithRed:218.0/255.0 green:218.0/255.0 blue:218.0/255.0 alpha:1.0f] CGColor],
                        (id)[[UIColor colorWithRed:233.0/255.0 green:233.0/255.0 blue:233.0/255.0 alpha:1.0f] CGColor],
                        (id)[[UIColor colorWithRed:218.0/255.0 green:218.0/255.0 blue:218.0/255.0 alpha:1.0f] CGColor],
                        nil];
 
     CGFloat cornerRadius = kCustomIOS7AlertViewCornerRadius;
-    gradient.cornerRadius = cornerRadius;
-    [dialogContainer.layer insertSublayer:gradient atIndex:0];
+    self.gradient.cornerRadius = cornerRadius;
+    [dialogContainer.layer insertSublayer:self.gradient atIndex:0];
 
     dialogContainer.layer.cornerRadius = cornerRadius;
     dialogContainer.layer.borderColor = [[UIColor colorWithRed:198.0/255.0 green:198.0/255.0 blue:198.0/255.0 alpha:1.0f] CGColor];
@@ -204,20 +182,38 @@ CGFloat buttonSpacerHeight = 0;
     dialogContainer.layer.shadowOffset = CGSizeMake(0 - (cornerRadius+5)/2, 0 - (cornerRadius+5)/2);
     dialogContainer.layer.shadowColor = [UIColor blackColor].CGColor;
     dialogContainer.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:dialogContainer.bounds cornerRadius:dialogContainer.layer.cornerRadius].CGPath;
+    dialogContainer.clipsToBounds = YES;
 
+    dialogContainer.autoresizesSubviews = NO;
+    dialogContainer.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
+    
     // There is a line above the button
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, dialogContainer.bounds.size.height - buttonHeight - buttonSpacerHeight, dialogContainer.bounds.size.width, buttonSpacerHeight)];
-    lineView.backgroundColor = [UIColor colorWithRed:198.0/255.0 green:198.0/255.0 blue:198.0/255.0 alpha:1.0f];
-    [dialogContainer addSubview:lineView];
+    _lineView = [[UIView alloc] initWithFrame:CGRectMake(0, dialogContainer.bounds.size.height - buttonHeight - buttonSpacerHeight, dialogContainer.bounds.size.width, buttonSpacerHeight)];
+    self.lineView.backgroundColor = [UIColor colorWithRed:198.0/255.0 green:198.0/255.0 blue:198.0/255.0 alpha:1.0f];
+    [dialogContainer addSubview:self.lineView];
     // ^^^
 
     // Add the custom container if there is any
-    [dialogContainer addSubview:containerView];
+    [dialogContainer addSubview:self.containerView];
 
     // Add the buttons too
     [self addButtonsToView:dialogContainer];
-
+    
     return dialogContainer;
+}
+
+- (void)resizeForNewContainerView
+{
+    CGSize dialogSize = [self countDialogSize];
+    CGSize screenSize = [self countScreenSize];
+    
+    self.dialogView.frame = CGRectMake((screenSize.width - dialogSize.width) / 2, (screenSize.height - dialogSize.height) / 2, dialogSize.width, dialogSize.height);
+    
+    self.gradient.frame = self.dialogView.bounds;
+    
+    self.lineView.frame = CGRectMake(0, self.dialogView.bounds.size.height - buttonHeight - buttonSpacerHeight, self.dialogView.bounds.size.width, buttonSpacerHeight);
+
+    [self resizeButtons:self.dialogView];
 }
 
 // Helper function: add buttons to container
@@ -246,11 +242,24 @@ CGFloat buttonSpacerHeight = 0;
     }
 }
 
+- (void)resizeButtons:(UIView *)container
+{
+    CGFloat buttonWidth = container.bounds.size.width / [buttonTitles count];
+    
+    int i = 0;
+    for (UIView *view in self.dialogView.subviews) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            [view setFrame:CGRectMake(i * buttonWidth, container.bounds.size.height - buttonHeight, buttonWidth, buttonHeight)];
+            i++;
+        }
+    }
+}
+
 // Helper function: count and return the dialog's size
 - (CGSize)countDialogSize
 {
-    CGFloat dialogWidth = containerView.frame.size.width;
-    CGFloat dialogHeight = containerView.frame.size.height + buttonHeight + buttonSpacerHeight;
+    CGFloat dialogWidth = self.containerView.frame.size.width;
+    CGFloat dialogHeight = self.containerView.frame.size.height + buttonHeight + buttonSpacerHeight;
 
     return CGSizeMake(dialogWidth, dialogHeight);
 }
@@ -311,52 +320,69 @@ CGFloat buttonSpacerHeight = 0;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 }
 
+- (UIView *)setupContainerView
+{
+    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    UIView *container = self.containerView;
+    
+    switch (interfaceOrientation) {
+        case UIInterfaceOrientationLandscapeLeft:
+        case UIInterfaceOrientationLandscapeRight:
+            container = (self.containerViewLandscape) ? self.containerViewLandscape : self.containerView;
+            break;
+        default:
+            container = (self.containerViewPortrait) ? self.containerViewPortrait : self.containerView;
+            break;
+    }
+    
+    return container;
+}
+
 // Handle device orientation changes
 - (void)deviceOrientationDidChange: (NSNotification *)notification
 {
-    // If dialog is attached to the parent view, it probably wants to handle the orientation change itself
-    if (parentView != NULL) {
+    UIView *containerViw = [self setupContainerView];
+    
+    if ([self.containerView isEqual:containerViw]) {
         return;
     }
+    
+    NSTimeInterval animationTime = 0.175f;
+    
+    //if you want to hide border (in main thread)
+    self.dialogView.layer.borderWidth = 0;
+    // self.lineView.hidden = YES;
+    
+    [UIView transitionWithView:self.dialogView duration:animationTime
+                       options:UIViewAnimationOptionTransitionNone //change to whatever animation you like
+                    animations:^ {
+                        self.containerView.alpha = 0.0;
+                        
+                    } completion:^(BOOL finished) {
+                        
+                        
+                        [self.containerView removeFromSuperview];
+                        self.containerView = containerViw;
+                        
+                        [self.dialogView addSubview:self.containerView];
+                        self.containerView.alpha = 0.0;
+                        
+                        self.dialogView.center = self.center;
+                        
 
-    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-
-    CGFloat startRotation = [[self valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
-    CGAffineTransform rotation;
-
-    switch (interfaceOrientation) {
-        case UIInterfaceOrientationLandscapeLeft:
-            rotation = CGAffineTransformMakeRotation(-startRotation + M_PI * 270.0 / 180.0);
-            break;
-
-        case UIInterfaceOrientationLandscapeRight:
-            rotation = CGAffineTransformMakeRotation(-startRotation + M_PI * 90.0 / 180.0);
-            break;
-
-        case UIInterfaceOrientationPortraitUpsideDown:
-            rotation = CGAffineTransformMakeRotation(-startRotation + M_PI * 180.0 / 180.0);
-            break;
-
-        default:
-            rotation = CGAffineTransformMakeRotation(-startRotation + 0.0);
-            break;
-    }
-
-    [UIView animateWithDuration:0.2f delay:0.0 options:UIViewAnimationOptionTransitionNone
-					 animations:^{
-                         dialogView.transform = rotation;
-					 }
-					 completion:^(BOOL finished){
-                         // fix errors caused by being rotated one too many times
-                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5f * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                             UIInterfaceOrientation endInterfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-                             if (interfaceOrientation != endInterfaceOrientation) {
-                                 // TODO user moved phone again before than animation ended: rotation animation can introduce errors here
-                             }
-                         });
-                     }
-	 ];
-
+                        [UIView transitionWithView:self.dialogView duration:animationTime
+                                           options:UIViewAnimationOptionTransitionNone //change to whatever animation you like
+                                        animations:^ {
+                                            [self resizeForNewContainerView];
+                                            self.containerView.alpha = 1;
+                                            
+                                        } completion:^(BOOL finished) {
+                                            self.dialogView.layer.borderWidth = 1;
+                                            //self.lineView.hidden = NO;
+                                            
+                                        }];
+                    }];
 }
 
 // Handle keyboard show/hide changes

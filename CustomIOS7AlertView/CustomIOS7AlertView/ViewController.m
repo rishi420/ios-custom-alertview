@@ -42,7 +42,9 @@
     CustomIOS7AlertView *alertView = [[CustomIOS7AlertView alloc] init];
 
     // Add some custom content to the alert view
-    [alertView setContainerView:[self createDemoView]];
+    //[alertView setContainerView:[self createDemoView]];
+    alertView.containerViewPortrait = [[NSBundle mainBundle] loadNibNamed:@"PortraitView" owner:self options:nil][0];
+    alertView.containerViewLandscape = [[NSBundle mainBundle] loadNibNamed:@"LandscapeView" owner:self options:nil][0];
 
     // Modify the parameters
     [alertView setButtonTitles:[NSMutableArray arrayWithObjects:@"Close1", @"Close2", @"Close3", nil]];
@@ -66,15 +68,16 @@
     [alertView close];
 }
 
+/*
 - (UIView *)createDemoView
 {
     UIView *demoView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 290, 200)];
-
+    demoView.backgroundColor = [UIColor clearColor];
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 270, 180)];
     [imageView setImage:[UIImage imageNamed:@"demo"]];
     [demoView addSubview:imageView];
 
     return demoView;
 }
-
+*/
 @end

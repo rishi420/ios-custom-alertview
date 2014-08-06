@@ -1,4 +1,12 @@
 # Custom iOS7 AlertView
+Edited by Warif Akahnd Rishi
+https://github.com/rishi420/ios-custom-alertview
+
+## Change notes
+1. Removed rotation trasaton code. Alert rotates depending of parent window.
+2. Multiple view and size for landscape and portrait orientation support
+
+
 
 `v0.81`
 
